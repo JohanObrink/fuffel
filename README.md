@@ -1,2 +1,3 @@
-fuffel
+Fuffelspelet
 ======
+
