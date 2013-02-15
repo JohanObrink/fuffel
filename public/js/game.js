@@ -34,7 +34,11 @@
     this.objs = c('game-objects', this.width, this.height, this.el);
     this.ctx_objs = this.objs.getContext('2d');
 
+    this.stage = new Game.Stage(this.width, this.height, this.ctx_bg, this.ctx_objs);
+
     this.initialized = false;
+
+    this.controls = {};
 
     _.bindAll(this);
   };
@@ -45,7 +49,7 @@
     if(!this.initialized) {
       this.init();
     }
-    this.ticker = setInterval(this.render, 100);
+    this.ticker = setInterval(this.tick, 100);
   };
 
   // ##pause
@@ -66,7 +70,10 @@
   Game.prototype.init = function() {
     this.initialized = true;
 
-    
+    this.player = new Game.Player(Game.Characters.princess);
+    this.stage.add(this.player);
+
+    this.startListen();
   };
 
   // ##cleanup
@@ -75,10 +82,70 @@
     this.initialized = false;
   };
 
-  // ##render
+  // ##tick
   // Main game loop call
-  Game.prototype.render = function() {
-    console.log('render');
+  Game.prototype.tick = function() {
+
+    if(this.controls.left) {
+      this.player.move(-1);
+    }
+    if(this.controls.right) {
+      this.player.move(1);
+    }
+    if(this.controls.up) {
+      this.player.jump();
+      this.controls.up = false;
+    }
+
+    this.stage.render();
+  };
+
+  Game.prototype.keydown = function(e) {
+    switch(e.keyCode) {
+      case 37:
+        // left
+        this.controls.left = true;
+        break;
+      case 39:
+        // right
+        this.controls.right = true;
+        break;
+      case 38:
+      case 32:
+        // up
+        this.controls.up = true;
+        break;
+      case 40:
+        // down
+        break;
+
+      default: console.log(e.keyCode); break;
+    }
+  };
+
+  Game.prototype.keyup = function(e) {
+    switch(e.keyCode) {
+      case 37:
+        // left
+        this.controls.left = false;
+        break;
+      case 39:
+        // left
+        this.controls.right = false;
+        break;
+      case 38:
+        // up
+        break;
+      case 40:
+        // down
+        break;
+
+      default: console.log(e.keyCode); break;
+    }
+  };
+
+  Game.prototype.startListen = function() {
+    $(window).keydown(this.keydown).keyup(this.keyup);
   };
 
 })();

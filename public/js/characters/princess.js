@@ -9,61 +9,8 @@
 
     normal: {
       standing: {
-        left: '',
+        left: { width: 236, height: 300, src: '/img/characters/princess-standing.png' },
         right: ''
-      },
-      walking {
-        left: [],
-        right: []
-      },
-      jumping: {
-        left: [],
-        right: []
-      }
-    },
-
-    big: {
-      standing: {
-        left: '',
-        right: ''
-      },
-      walking {
-        left: [],
-        right: []
-      },
-      jumping: {
-        left: [],
-        right: []
-      }
-    },
-
-    small: {
-      standing: {
-        left: '',
-        right: ''
-      },
-      walking {
-        left: [],
-        right: []
-      },
-      jumping: {
-        left: [],
-        right: []
-      }
-    },
-
-    messy: {
-      standing: {
-        left: '',
-        right: ''
-      },
-      walking {
-        left: [],
-        right: []
-      },
-      jumping: {
-        left: [],
-        right: []
       }
     }
 

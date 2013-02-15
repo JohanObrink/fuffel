@@ -10,4 +10,6 @@ $(function() {
 
   window.game = game;
 
+  game.start();
+
 });

@@ -8,37 +8,33 @@
   // The Player is the protagonist of the game
   // Basically your average controllabe, star picking, monster squashing
   // princess/agent/horse owner/Darth Vader bad ass.
-  var Player = Game.Player = function(caracter) {
+  var Player = Game.Player = function(character) {
+
+    this.groundY = 150;
 
     // the struct holding url:s for each caracter image based on current action
-    this.caracter = caracter;
+    this.character = character;
 
     // the caracters velocity - currently only used for jumping
     this.velocity = { x: 0, y: 0 };
 
     // players current position - updated by updatePosition method
-    this.position = { x: 0, y: 0 };
+    this.position = { x: 0, y: 150 };
 
     // the area that needs to be deleted from the canvas before rendering the new image
-    this.clearRect = null;
-
-    // the size of the new image to render - position is retrieved from position
-    this.renderRect = { width: 0, height: 0 };
-
-    // the collision detection size of the player
-    this.hitRect = { x: 0, y: 0, width: 0, height: 0 };
+    this.oldPosition = {};
 
     // the basic speed of movement while walking / jumping
-    this.speed = { x: 2, y: 5 };
+    this.speed = { x: 10, y: 40 };
 
     // the rate of y speed change when jumping
-    this.gravity = 0.1;
+    this.gravity = 9.2;
 
     // a flag indicating whether the player needs to be redrawn
     this.needsRedraw = true;
 
     // the current drawn image
-    this.currentImage = '';
+    this.currentImage = null;
 
     _.bindAll(this);
   };
@@ -47,6 +43,7 @@
   // move one step left or right (-1 | 1)
   Player.prototype.move = function(direction) {
     this.velocity.x = this.speed.x * direction / Math.abs(direction);
+    
     return this;
   };
 
@@ -54,7 +51,7 @@
   // jump... duh!
   Player.prototype.jump = function() {
     //check if player is on the ground
-    if(this.position.y === 0) {
+    if(this.position.y === this.groundY) {
       this.velocity.y = -this.speed.y;
     }
     return this;
@@ -63,15 +60,18 @@
   // ##updatePosition
   // Called by the Game's render loop to update player position
   Player.prototype.updatePosition = function() {
+
+    this.oldPosition = { x: this.position.x, y: this.position.y };
     
     //make jumps slow down
     if(this.velocity.y !== 0) {
-      this.velocity.y -= this.gravity;
-      this.position.y += this.velocity;
+
+      this.position.y += this.velocity.y;
+      this.velocity.y += this.gravity;
 
       // check if player has landed
-      if(this.position.y <= 0) {
-        this.position.y = 0;
+      if(this.position.y >= this.groundY) {
+        this.position.y = this.groundY;
         this.velocity.y = 0;
       }
 
@@ -85,6 +85,8 @@
       this.needsRedraw = true;
     }
 
+    this.velocity.x = 0;
+
     return this;
   };
 
@@ -93,26 +95,16 @@
   Player.prototype.render = function(ctx) {
 
     var newImage = this.getImage();
-    if(newImage !== this.currentImage) {
+    if(!this.currentImage || this.currentImage.src.indexOf(newImage.src) === -1) {
       this.needsRedraw = true;
-      this.currentImage = newImage;
+      this.currentImage = new Image();
+      this.currentImage.src = newImage.src;
     }
 
-    if(this.needsRedraw) {
-      if(this.clearRect) {
-        this.clear(ctx);
-      }
-
-    }
+    ctx.clearRect(this.oldPosition.x, this.oldPosition.y, this.currentImage.width, this.currentImage.height);
+    ctx.drawImage(this.currentImage, this.position.x, this.position.y);
 
     this.needsRedraw = false;
-    
-    return this;
-  };
-
-  // ##clearRect
-  // Deletes the current player from the canvas
-  Player.prototype.clear = function(ctx) {
     
     return this;
   };
@@ -121,8 +113,7 @@
   // Called from render
   // Updates current player image according to movement
   Player.prototype.getImage = function() {
-    
-    return this;
+    return this.character.normal.standing.left;
   };
 
 
