@@ -49,7 +49,7 @@
     if(!this.initialized) {
       this.init();
     }
-    this.ticker = setInterval(this.tick, 100);
+    this.ticker = setInterval(this.tick, 1/30);
   };
 
   // ##pause

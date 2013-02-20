@@ -10,7 +10,7 @@
   // princess/agent/horse owner/Darth Vader bad ass.
   var Player = Game.Player = function(character) {
 
-    this.groundY = 150;
+    this.groundY = 220;
 
     // the struct holding url:s for each caracter image based on current action
     this.character = character;
@@ -19,16 +19,16 @@
     this.velocity = { x: 0, y: 0 };
 
     // players current position - updated by updatePosition method
-    this.position = { x: 0, y: 150 };
+    this.position = { x: 350, y: this.groundY };
 
     // the area that needs to be deleted from the canvas before rendering the new image
     this.oldPosition = {};
 
     // the basic speed of movement while walking / jumping
-    this.speed = { x: 10, y: 40 };
+    this.speed = { x: 3, y: 40/4 };
 
     // the rate of y speed change when jumping
-    this.gravity = 9.2;
+    this.gravity = 9.2/50;
 
     // a flag indicating whether the player needs to be redrawn
     this.needsRedraw = true;

@@ -17,6 +17,9 @@
 
     _.bindAll(this);
 
+    this.grass = new Image();
+    this.grass.src = '/img/grass.png';
+
     this.init();
   };
 
